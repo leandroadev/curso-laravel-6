@@ -81,7 +81,7 @@
 
             <div class="content">
                 <div class="title m-b-md">
-                    Laravel Repositores
+                    Laravel Repositories
                 </div>
 
                 <div class="links">
