@@ -178,8 +178,8 @@ Route::post('/register', function () {
 
 Route::get('/empresa', function () {
     return view('site.contact');
-});
+}); */
 
 Route::get('/', function () {
     return view('welcome');
-}); */
+});
