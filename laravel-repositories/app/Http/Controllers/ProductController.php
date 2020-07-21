@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreUpdateProductRequest;
+use App\Models\Product;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -30,12 +31,11 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $teste = 123;
-        $teste2 = 123;
-        $teste3 = [1,2,3,4,5,6];
-        $products = ['TV', 'Geladeira', 'Forno', 'Sofá'];
+        $products = Product::all();
 
-        return view('admin.pages.products.index', compact('teste', 'teste2', 'teste3', 'products'));
+        return view('admin.pages.products.index', [
+            'products' => $products,
+        ]);
     }
 
     /**
