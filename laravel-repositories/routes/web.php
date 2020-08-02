@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::any('product/search', 'ProductController@search')->name('products.search');
 Route::resource('products', 'ProductController');//->middleware('auth');
 
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreUpdateProductRequest;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -62,6 +63,12 @@ class ProductController extends Controller
     {
 
         $data = $request->only('name', 'description', 'price');
+
+        if($request->hasFile('image') && $request->image->isValid()) {
+            $imagePath = $request->image->store('products');
+
+            $data['image'] = $imagePath;
+        }
 
         $this->repository->create($data);
 
@@ -132,16 +139,28 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\StoreUpdateProductRequest  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(StoreUpdateProductRequest $request, $id)
     {
         if(!$product = $this->repository->find($id))
             return redirect()->back();
 
-        $product->update($request->all());
+        $data = $request->all();
+
+        if($request->hasFile('image') && $request->image->isValid()) {
+
+            if ($product->image && Storage::exists($product->image)){
+                Storage::delete($product->image);
+            }
+
+            $imagePath = $request->image->store('products');
+            $data['image'] = $imagePath;
+        }
+
+        $product->update($data);
 
         return redirect()->route('products.index');
     }
@@ -158,8 +177,27 @@ class ProductController extends Controller
         if(!$product)
             return redirect()->back();
 
+        if ($product->image && Storage::exists($product->image)){
+            Storage::delete($product->image);
+        }
+
         $product->delete();
 
         return redirect()->route('products.index');
+    }
+
+    /**
+     * Search Products
+     */
+    public function search(Request $request)
+    {
+        $filters = $request->except('_token');
+
+        $products = $this->repository->search($request->filter);
+
+        return view('admin.pages.products.index', [
+            'products' => $products,
+            'filters' => $filters,
+        ]);
     }
 }
