@@ -13,8 +13,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::any('product/search', 'ProductController@search')->name('products.search');
-Route::resource('products', 'ProductController');//->middleware('auth');
+Route::any('product/search', 'ProductController@search')->name('products.search')->middleware('auth');
+Route::resource('products', 'ProductController')->middleware('auth');
 
 
 /* Route::delete('products/{id}', 'ProductController@destroy')->name('products.destroy');
@@ -90,7 +90,7 @@ Route::post('products', 'ProductController@store')->name('products.store'); */
 }); */
 
 // Grupo de Rotas
-//Rota redirecionando para a página de Login
+// Rota redirecionando para a página de Login
 Route::get('/login', function () {
     return 'Login';
 })->name('login');
@@ -184,3 +184,7 @@ Route::get('/empresa', function () {
 Route::get('/', function () {
     return view('welcome');
 });
+
+Auth::routes(['register' => false]);
+
+Route::get('/home', 'HomeController@index')->name('home');
