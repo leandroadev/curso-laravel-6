@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::any('product/search', 'ProductController@search')->name('products.search')->middleware('auth');
-Route::resource('products', 'ProductController')->middleware('auth');
+Route::resource('products', 'ProductController')->middleware(['auth', 'check.is.admin']);
 
 
 /* Route::delete('products/{id}', 'ProductController@destroy')->name('products.destroy');
